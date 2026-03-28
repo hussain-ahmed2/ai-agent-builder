@@ -27,3 +27,29 @@ Using **TailwindCSS v4** and **Shadcn UI**, the visual narrative is set to be mo
 While highly functional, the initial state model mutated arrays and excessively triggered network conditions. 
 - The refactored state decouples the UI selection from the API fetching.
 - Utilizing React's immutable state paradigms, dragging and dropping operates instantly, making the application feel snappy and reactive.
+
+## 5. Technical Implementation Details
+
+### State Management (Zustand)
+The application architecture utilizes a **3-Store Zustand Pattern** to separate concerns:
+1.  **`useDataStore`**: Manages the fetching and caching of library data (skills, layers, profiles). It ensures that multiple selection changes do not trigger redundant and expensive API re-fetches.
+2.  **`useBuilderStore`**: Handles the transient, "in-progress" state of the AI Agent currently being constructed. This includes the selected profile, skills (with order persistence), layers, and provider.
+3.  **`useSavedAgentsStore`**: A persistent store (using `zustand/middleware/persist`) that manages the user's library of created agents. It's automatically synced to `localStorage`.
+
+### Drag-and-Drop Architecture (dnd-kit)
+The interface uses `@dnd-kit` for its primary interactions. This choice provides:
+- **Accessibility:** It supports keyboard and screen-reader interactions natively.
+- **Performance:** It uses modern browser APIs to ensure zero-latency dragging even with hundreds of items.
+- **Flexibility:** Custom "Collision Detection" ensures that dropping a skill into a list of existing skills allows for precise reordering.
+
+### Component Foundation (Radix UI + Shadcn)
+The UI components are built on top of **Radix UI** primitives and styled with **Tailwind CSS v4**. 
+- **Accessibility by Default:** Every interactive element (Selects, Dialogs, ScrollAreas) is fully compliant with WAI-ARIA standards.
+- **Premium Aesthetics:** By leveraging Tailwind v4's modern features like `oklch` colors and container queries, the application maintains a consistent, high-end "Dark Mode" aesthetic.
+- **Polish:** Custom scrollbars (via Radix ScrollArea) and non-interruptive toasts (Sonner) ensure a seamless, professional user journey.
+
+### Aesthetic Polish
+To achieve a state-of-the-art feel, the application focuses on clean spacing, modern typography, and standard non-interruptive components:
+1.  **Micro-Animations:** Every interaction—from dragging a skill to clearing the canvas—is accompanied by a subtle transition or a non-blocking toast notification to provide immediate tactile feedback.
+2.  **Typography:** By standardizing on the `Geist` and `Inter` variable fonts, the interface maintains a crisp, developer-friendly aesthetic that remains legible even at small sizes.
+3.  **Consistency:** Standardized border-radii and consistent padding across cards and panels ensure a cohesive, pro-grade user experience.
